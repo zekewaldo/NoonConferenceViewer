@@ -1,56 +1,75 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>My Published Google Sheet</title>
+  <meta charset="UTF-8">
+  <title>Radiation Oncology Survey Data</title>
   <script src="https://unpkg.com/tabletop@1.6.0/tabletop.js"></script>
   <style>
-    table { border-collapse: collapse; width: 100%; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-    th { background-color: #f2f2f2; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2em;
+      background-color: #f8f8f8;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1em;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 0.5em;
+      text-align: left;
+    }
+    th {
+      background-color: #e0e0e0;
+    }
+    h1 {
+      font-size: 1.5em;
+      margin-bottom: 0.5em;
+    }
   </style>
-</head>
-<body>
-  <h2>Google Sheet Data</h2>
-  <table id="sheetTable"></table>
-
   <script>
-    const publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTzNKwzC3WQdytWJ2-dYnBGQqDyUTgB5kKhFux-ToCGSiLWT0ApsIeuTOoiVFUU0D63LDMdU4I2uzwO/pubhtml?gid=0&single=true’;
+    window.addEventListener('DOMContentLoaded', init)
 
     function init() {
+      var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTzNKwzC3WQdytWJ2-dYnBGQqDyUTgB5kKhFux-ToCGSiLWT0ApsIeuTOoiVFUU0D63LDMdU4I2uzwO/pubhtml'
+
       Tabletop.init({
         key: publicSpreadsheetUrl,
         callback: showInfo,
         simpleSheet: true
-      });
+      })
     }
 
-    function showInfo(data) {
-      const table = document.getElementById("sheetTable");
+    function showInfo(data, tabletop) {
+      const container = document.getElementById("output")
       if (data.length === 0) {
-        table.innerHTML = "<tr><td>No data found</td></tr>";
+        container.innerHTML = "<p>No data found.</p>";
         return;
       }
 
-      // Add table headers
-      let headerRow = "<tr>";
+      let html = "<table><thead><tr>";
       Object.keys(data[0]).forEach(key => {
-        headerRow += `<th>${key}</th>`;
+        html += `<th>${key}</th>`;
       });
-      headerRow += "</tr>";
-      table.innerHTML += headerRow;
+      html += "</tr></thead><tbody>";
 
-      // Add table rows
       data.forEach(row => {
-        let rowHTML = "<tr>";
-        Object.values(row).forEach(cell => {
-          rowHTML += `<td>${cell}</td>`;
+        html += "<tr>";
+        Object.values(row).forEach(value => {
+          html += `<td>${value}</td>`;
         });
-        rowHTML += "</tr>";
-        table.innerHTML += rowHTML;
+        html += "</tr>";
       });
-    }
 
-    window.addEventListener('DOMContentLoaded', init);
+      html += "</tbody></table>";
+      container.innerHTML = html;
+    }
   </script>
+</head>
+<body>
+  <h1>Radiation Oncology Survey Data</h1>
+  <div id="output">Loading...</div>
 </body>
 </html>
+
