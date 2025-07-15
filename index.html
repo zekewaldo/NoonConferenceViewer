@@ -1,79 +1,43 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-  <script src="https://unpkg.com/tabletop@1.6.0/tabletop.js"></script>
-
-<head>
-  <meta charset="UTF-8">
-  <title>Radiation Oncology Survey Data</title>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 2em;
-      background-color: #f8f8f8;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1em;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 0.5em;
-      text-align: left;
-    }
-    th {
-      background-color: #e0e0e0;
-    }
-    h1 {
-      font-size: 1.5em;
-      margin-bottom: 0.5em;
-    }
-  </style>
-  <script>
-    window.addEventListener('DOMContentLoaded', init)
-
-    function init() {
-      var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTzNKwzC3WQdytWJ2-dYnBGQqDyUTgB5kKhFux-ToCGSiLWT0ApsIeuTOoiVFUU0D63LDMdU4I2uzwO/pubhtml'
-
-      Tabletop.init({
-        key: publicSpreadsheetUrl,
-        callback: showInfo,
-        simpleSheet: true
-      })
-    }
-
-    function showInfo(data, tabletop) {
-      const container = document.getElementById("output")
-      if (data.length === 0) {
-        container.innerHTML = "<p>No data found.</p>";
-        return;
-      }
-
-      let html = "<table><thead><tr>";
-      Object.keys(data[0]).forEach(key => {
-        html += `<th>${key}</th>`;
-      });
-      html += "</tr></thead><tbody>";
-
-      data.forEach(row => {
-        html += "<tr>";
-        Object.values(row).forEach(value => {
-          html += `<td>${value}</td>`;
-        });
-        html += "</tr>";
-      });
-
-      html += "</tbody></table>";
-      container.innerHTML = html;
-    }
-  </script>
+  <title>Google Sheet Data</title>
+  <script src="https://cdn.jsdelivr.net/npm/tabletop@1.6.0/src/tabletop.min.js"></script>
 </head>
 <body>
   <h1>Radiation Oncology Survey Data</h1>
   <div id="output">Loading...</div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', function() {
+      Tabletop.init({
+        key: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTzNKwzC3WQdytWJ2-dYnBGQqDyUTgB5kKhFux-ToCGSiLWT0ApsIeuTOoiVFUU0D63LDMdU4I2uzwO/pubhtml',
+        callback: function(data, tabletop) {
+          let output = document.getElementById('output');
+          if (data.length === 0) {
+            output.innerText = "No data found.";
+            return;
+          }
+
+          let html = "<table border='1' cellpadding='5'><thead><tr>";
+          Object.keys(data[0]).forEach(key => {
+            html += `<th>${key}</th>`;
+          });
+          html += "</tr></thead><tbody>";
+          data.forEach(row => {
+            html += "<tr>";
+            Object.values(row).forEach(value => {
+              html += `<td>${value}</td>`;
+            });
+            html += "</tr>";
+          });
+          html += "</tbody></table>";
+          output.innerHTML = html;
+        },
+        simpleSheet: true
+      });
+    });
+  </script>
 </body>
 </html>
 
